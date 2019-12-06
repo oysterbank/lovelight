@@ -48,12 +48,13 @@ class Light():
     def name(self):
         return self.light.name
 
-    def dim_off(self, end_state, seconds):
+    def dim(self, end_state, brightness, seconds):
         transition_time = seconds * 10
         self.bridge.set_light(
             self.id,
             {
                 "on": end_state,
+                "bri": brightness,
                 "transitiontime": transition_time
             }
         )
