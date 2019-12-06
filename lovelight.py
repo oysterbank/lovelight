@@ -44,6 +44,10 @@ class Light():
     def id(self):
         return self.light.light_id
 
+    @property
+    def name(self):
+        return self.light.name
+
     def dim_off(self, end_state, seconds):
         transition_time = seconds * 10
         self.bridge.set_light(
