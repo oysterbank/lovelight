@@ -5,7 +5,7 @@ __author__ = "Kris Laratta"
 __copyright__ = "Copyright (C) 2019 Kris Laratta"
 __credits__ = ["Kris Laratta", ]
 __license__ = "GPL"
-__version__ = "0.0.2"
+__version__ = "0.1.0"
 __maintainer__ = "Kris Laratta"
 __email__ = "krislaratta@gmail.com"
 __status__ = "Development"
@@ -77,6 +77,14 @@ class Light():
     def name(self):
         return self.light.name
 
+    @property
+    def hue(self):
+        return self.light.hue
+
+    @property
+    def saturation(self):
+        return self.light.saturation
+
     def on(self):
         self.light.on = True
 
@@ -92,3 +100,7 @@ class Light():
                 "transitiontime": transition_time
             }
         )
+
+    def color(self, hue, saturation):
+        self.light.hue = hue
+        self.light.saturation = saturation
