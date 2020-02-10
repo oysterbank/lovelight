@@ -2,10 +2,10 @@ from contextlib import contextmanager
 from phue import Bridge
 
 __author__ = "Kris Laratta"
-__copyright__ = "Copyright (C) 2019 Kris Laratta"
+__copyright__ = "Copyright (C) 2020 Kris Laratta"
 __credits__ = ["Kris Laratta", ]
 __license__ = "GPL"
-__version__ = "0.1.0"
+__version__ = "0.3.0"
 __maintainer__ = "Kris Laratta"
 __email__ = "krislaratta@gmail.com"
 __status__ = "Development"
@@ -27,6 +27,17 @@ class Lovelight():
             lights.append(light)
         return lights
 
+    @property
+    def groups(self):
+        groups = []
+        bridge = self.bridge
+        hue_groups = bridge.get_group()
+        for k in hue_groups.keys():
+            group_name = hue_groups[k]["name"]
+            group = Group(group_name, self.bridge)
+            groups.append(group)
+        return groups
+
     def all_on(self):
         for l in self.lights:
             l.light.on = True
@@ -36,11 +47,13 @@ class Lovelight():
             l.light.on = False
 
     @contextmanager
-    def graceful_stop(self,
-                      light,
-                      end_state,
-                      brightness=None,
-                      transition_time=None):
+    def graceful_stop(
+        self,
+        light,
+        end_state,
+        brightness=None,
+        transition_time=None
+    ):
         """
         Allows the user to define a state for a routine to end on.
         """
@@ -104,3 +117,27 @@ class Light():
     def color(self, hue, saturation):
         self.light.hue = hue
         self.light.saturation = saturation
+
+
+class Group():
+    def __init__(self, name, bridge):
+        self.bridge = bridge
+        self.group = self.bridge.get_group(name)
+
+    @property
+    def name(self):
+        return self.group['name']
+
+    @property
+    def lights(self):
+        lights = []
+        light_ids = self.group['lights']
+
+        ll = Lovelight(self.bridge.ip)
+        all_lights = ll.lights
+
+        for light in all_lights:
+            if str(light.id) in light_ids:
+                lights.append(light)
+
+        return lights
